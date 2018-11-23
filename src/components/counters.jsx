@@ -12,11 +12,16 @@ class Counters extends Component {
   };
 
   handleIncrement = counter => {
-    console.log(counter);
+    const counters = [...this.state.counters];
+    const index = counters.indexOf(counter);
+    counters[index] = { ...counter };
+    counters[index].value++;
+    this.setState({ counters });
   };
 
+  /**处理这个reset耽误了好长时间 竟然只是因为把counters写成了counter*/
   handleReset = () => {
-    const counters = this.state.counter.map(c => {
+    const counters = this.state.counters.map(c => {
       c.value = 0;
       return c;
     });
@@ -47,20 +52,26 @@ class Counters extends Component {
         </button>
 
         {this.state.counters.map(counter => (
-          //<Subcounter key={counter.id} value={counter.value} selected={true} />
-          //此处传给subcounter这些子components 以value和selected
           <Subcounter
             key={counter.id}
             onDelete={this.handleDelete}
             onIncrement={this.handleIncrement}
-            // pass a handle function to child component Subcounter
-            value={counter.value}
-            id={counter.id}
-          >
-            {/* <h4>Title</h4> */}
-            <h4>Counter #{counter.id}</h4>
-            {/* 这部分在h4包起来的就是被当作contained components（这里是subcounter）的children */}
-          </Subcounter>
+            counter={counter}
+          />
+
+          //此处传给subcounter这些子components 以value和selected
+          // <Subcounter
+          //   key={counter.id}
+          //   onDelete={this.handleDelete}
+          //   onIncrement={this.handleIncrement}
+          //   // pass a handle function to child component Subcounter
+          //   value={counter.value}
+          //   id={counter.id}
+          // >
+          //   {/* <h4>Title</h4> */}
+          //   <h4>Counter #{counter.id}</h4>
+          //   {/* 这部分在h4包起来的就是被当作contained components（这里是subcounter）的children */}
+          // </Subcounter>
         ))}
       </div>
     );
